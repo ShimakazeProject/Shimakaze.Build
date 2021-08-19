@@ -1,20 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-  <PropertyGroup>
-    <CsfName>ra2md</CsfName>
-    <OutputPath>out\</OutputPath>
-  </PropertyGroup>
-  
-    
-  <ItemGroup>
-    <String Include="Strings\*.json"/>
-  </ItemGroup>
-
-  <UsingTask TaskName="Shimakaze.MSBuild.CsfJsonTask" AssemblyFile="..\..\src\Shimakaze.MSBuild\bin\Debug\net6.0\Shimakaze.MSBuild.dll"/>
-
-  <Target Name="Build">
-    <CsfJsonTask Sources="@(String)" CsfName="$(CsfName)" OutputPath="$(OutputPath)"/>
-  </Target>
-    
-</Project>
+<Project Sdk="Shimakaze.MSBuild.Sdk"/>

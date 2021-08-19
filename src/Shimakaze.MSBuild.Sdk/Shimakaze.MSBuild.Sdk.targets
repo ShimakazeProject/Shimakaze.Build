@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <NoBuild>true</NoBuild>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net6.0</TargetFramework>
+    <SuppressDependenciesWhenPacking Condition="'$(SuppressDependenciesWhenPacking)' == ''">true</SuppressDependenciesWhenPacking>
+    <DevelopmentDependency Condition="'$(DevelopmentDependency)' == ''">true</DevelopmentDependency>
+    <RestoreOutputPath Condition="'$(RestoreOutputPath)' == ''">.</RestoreOutputPath>
+    <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">out\</PackageOutputPath>
+  </PropertyGroup>
+
+  <Target Name="BuiltProjectOutputGroup">
+    <Message Text="BuiltProjectOutputGroup" />
+  </Target>
+  <Target Name="DocumentationProjectOutputGroup">
+    <Message Text="DocumentationProjectOutputGroup" />
+  </Target>
+  <Target Name="SatelliteDllsProjectOutputGroup">
+    <Message Text="SatelliteDllsProjectOutputGroup" />
+  </Target>
+  <Target Name="DebugSymbolsProjectOutputGroup">
+    <Message Text="DebugSymbolsProjectOutputGroup" />
+  </Target>
+  <Target Name="ResolveReferences">
+    <Message Text="ResolveReferences" />
+  </Target>
+  <!-- Import targets from NuGet.Build.Tasks.Pack package/Sdk -->
+  <PropertyGroup>
+    <NuGetBuildTasksPackTargets Condition="'$(IsCrossTargetingBuild)' == 'true'">$(MSBuildSDKsPath)\NuGet.Build.Tasks.Pack\buildCrossTargeting\NuGet.Build.Tasks.Pack.targets</NuGetBuildTasksPackTargets>
+    <NuGetBuildTasksPackTargets Condition="'$(IsCrossTargetingBuild)' != 'true'">$(MSBuildSDKsPath)\NuGet.Build.Tasks.Pack\build\NuGet.Build.Tasks.Pack.targets</NuGetBuildTasksPackTargets>
+  </PropertyGroup>
+
+  <ImportGroup>
+    <Import Project="$(NuGetBuildTasksPackTargets)" Condition="Exists('$(NuGetBuildTasksPackTargets)')" />
+  </ImportGroup>
+
+  <Target Name="Build">
+    <CallTarget Targets="Pack" />
+  </Target>
+
+  <Target Name="Clean">
+    <RemoveDir Directories="$(PackageOutputPath)" />
+    <Delete Files="tools\Shimakaze.MSBuild.Tasks.dll" />
+  </Target>
+
+</Project>

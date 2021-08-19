@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="_BuildCSF" Condition="$(BuildCsfFile) == 'true'">
+    <Message Text="Skip Generate CSF" Condition="@(String) == ''" />
+    <CsfJsonTask Sources="@(String)" TargetName="$(CsfName)" OutputPath="$(OutputPath)" Condition="@(String) != ''" />
+  </Target>
+
+
+  <Target Name="_BuildRules" Condition="$(BuildRuleIniFile) == 'true'">
+    <Message Text="Skip Generate Rules" Condition="@(Rule) == ''" />
+    <IniMergeTask Sources="@(Rule)" TargetName="$(RulesName)" OutputPath="$(OutputPath)" Condition="@(Rule) != ''" />
+  </Target>
+
+  <Target Name="_BuildArt" Condition="$(BuildArtIniFile) == 'true'">
+    <Message Text="Skip Generate Rules" Condition="@(Art) == ''" />
+    <IniMergeTask Sources="@(Art)" TargetName="$(ArtName)" OutputPath="$(OutputPath)" Condition="@(Art) != ''" />
+  </Target>
+
+  <Target Name="_CopyAssets" Condition="$(CopyAssets) == 'true'">
+    <Message Text="Skip Copy Assets" Condition="@(Assets) == ''" />
+    <Copy SourceFiles="@(Assets)" DestinationFolder="$(OutputPath)" Condition="@(Assets) != ''" />
+  </Target>
+
+  <Target Name="_BuildINI" Condition="$(BuildIniFile) == 'true'">
+    <CallTarget Targets="_BuildRules" />
+    <CallTarget Targets="_BuildArt" />
+  </Target>
+
+  <Target Name="Build">
+    <CallTarget Targets="_BuildCSF" />
+    <CallTarget Targets="_BuildINI" />
+    <CallTarget Targets="_CopyAssets" />
+    <Message Text="$(MSBuildProjectName) -> $(MSBuildProjectDirectory)\$(OutputPath)" Importance="high" />
+  </Target>
+
+</Project>

@@ -17,9 +17,21 @@ namespace Shimakaze.MSBuild;
 
 public class CsfJsonTask : Microsoft.Build.Utilities.Task
 {
+
+#pragma warning disable CS8618 // Non-nullable field is uninitialized.
+    [Required]
+    public string Sources { get; set; }
+
+    [Required]
+    public string TargetName { get; set; }
+
+    [Required]
+    public string OutputPath { get; set; }
+#pragma warning restore CS8618 // Non-nullable field is uninitialized.
+
     public override bool Execute()
     {
-        Log.LogMessage(MessageImportance.High, "Executing CsfJsonV2Task");
+        Log.LogMessage("Starting {0}", nameof(CsfJsonTask));
         if (string.IsNullOrEmpty(Sources))
         {
             Log.LogError("Sources is null or empty");
@@ -32,31 +44,25 @@ public class CsfJsonTask : Microsoft.Build.Utilities.Task
 
         files.ForEach(x =>
         {
-            Log.LogMessage(MessageImportance.Low, "Compiling {0}", x.FullName);
-            CsfStruct? _csf = default;
             using var fs = x.OpenRead();
-
             var protocol = JsonSerializer.Deserialize<JsonProtocol>(fs)?.Protocol;
+            fs.Seek(0, SeekOrigin.Begin);
 
-            switch (protocol)
+            Log.LogMessage("Parsing: \"{0}\"", x.FullName);
+            Log.LogMessage("Protocol: {0}", protocol);
+
+            if (protocol switch
             {
-                case 1:
-                    _csf = JsonSerializer.Deserialize<CsfStruct>(fs, V1::CsfJsonConverterUtils.CsfJsonSerializerOptions);
-                    break;
-                case 2:
-                    _csf = JsonSerializer.Deserialize<CsfStruct>(fs, V2::CsfJsonConverterUtils.CsfJsonSerializerOptions);
-                    break;
-            }
-
-            if (_csf is null)
+                1 => JsonSerializer.Deserialize<CsfStruct>(fs, V1::CsfJsonConverterUtils.CsfJsonSerializerOptions),
+                2 => JsonSerializer.Deserialize<CsfStruct>(fs, V2::CsfJsonConverterUtils.CsfJsonSerializerOptions),
+                _ => default,
+            } is CsfStruct _csf)
             {
-                Log.LogError("Cannot Complet {0}", x.FullName);
-                throw new();
+                head = _csf.Head;
+                data.AddRange(_csf.Datas);
             }
-
-            head = _csf.Head;
-            data.AddRange(_csf.Datas);
-
+            else
+                Log.LogWarning("Cannot Load File \"{0}\"", x.FullName);
         });
         head.LabelCount = data.Count;
         head.StringCount = data.Select((CsfLabel x) => x.Values.Length).Sum();
@@ -67,23 +73,16 @@ public class CsfJsonTask : Microsoft.Build.Utilities.Task
             Datas = data.ToArray(),
         });
 
+        Log.LogMessage("Label Count: {0}", head.LabelCount);
+        Log.LogMessage("String Count: {0}", head.StringCount);
+
         if (!Directory.Exists(OutputPath))
             Directory.CreateDirectory(OutputPath);
 
-        File.WriteAllBytes(Path.Combine(OutputPath, CsfName + ".csf"), bytes);
+        File.WriteAllBytes(Path.Combine(OutputPath, TargetName + ".csf"), bytes);
 
-        Log.LogMessage(MessageImportance.High, "Completed CsfJsonV2Task");
+        Log.LogMessage(MessageImportance.High, $"Successful build \"{Path.GetFullPath(Path.Combine(OutputPath, $"{TargetName}.csf"))}\"");
         return true;
     }
 
-#pragma warning disable CS8618 // Non-nullable field is uninitialized.
-    [Required]
-    public string Sources { get; set; }
-
-    [Required]
-    public string CsfName { get; set; }
-
-    [Required]
-    public string OutputPath { get; set; }
-#pragma warning restore CS8618 // Non-nullable field is uninitialized.
 }
