@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <BuildTaskPath>$(MSBuildThisFileDirectory)src\Shimakaze.Build.Tasks</BuildTaskPath>
+    <BuildTaskProject>$(BuildTaskPath)\Shimakaze.Build.Tasks.csproj</BuildTaskProject>
+    <SDKPath>$(MSBuildThisFileDirectory)src\Shimakaze.CNC2.Sdk</SDKPath>
+    <SDKProject>$(SDKPath)\Shimakaze.CNC2.Sdk.proj</SDKProject>
+    <SamplePath>$(MSBuildThisFileDirectory)sample\Shimakaze.MSBuild.Sample</SamplePath>
+    <SampleProject>$(SamplePath)\Shimakaze.MSBuild.Sample.cnc2proj</SampleProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DeleteFile Include="$(SDKPath)\tools\Shimakaze.Build.Tasks.deps.json" />
+    <DeleteFile Include="$(SDKPath)\tools\Shimakaze.Build.Tasks.pdb" />
+  </ItemGroup>
+
+  <Target Name="Build">
+    <MSBuild Projects="$(BuildTaskProject)" Properties="Configuration=Release;OutputPath=$(SDKPath)\tools" />
+    <MSBuild Projects="$(SDKProject)" />
+    <Delete Files="@(DeleteFile)" />
+  </Target>
+
+  <Target Name="Clean">
+    <MSBuild Projects="$(BuildTaskProject)" Targets="Clean" />
+    <MSBuild Projects="$(SDKProject)" Targets="Clean" />
+  </Target>
+
+  <Target Name="BuildTest">
+    <MakeDir Directories="$(SamplePath)\obj\.nuget\" />
+    <Exec Command="dotnet nuget push $(SDKPath)\out\*.nupkg -s $(SamplePath)\obj\.nuget\" />
+  </Target>
+
+  <Target Name="CleanTest">
+    <MSBuild Projects="$(SampleProject)" Targets="Clean" />
+    <RemoveDir Directories="$(SamplePath)\obj" />
+  </Target>
+
+  <Target Name="Test">
+    <MSBuild Projects="$(SampleProject)" />
+  </Target>
+  
+  <Target Name="CleanAll">
+    <CallTarget Targets="CleanTest;Clean" />
+  </Target>
+  <Target Name="BuildAll">
+    <CallTarget Targets="Build;BuildTest" />
+  </Target>
+  <Target Name="ReBuildAll">
+    <CallTarget Targets="CleanAll;BuildAll" />
+  </Target>
+
+</Project>

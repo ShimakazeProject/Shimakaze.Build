@@ -1,0 +1,10 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask
+      TaskName="Shimakaze.Build.Tasks.CsfTask"
+      AssemblyFile="$(ShimakazeMSBuildTasksAssembly)" />
+  <UsingTask
+      TaskName="Shimakaze.Build.Tasks.IniMergeTask"
+      AssemblyFile="$(ShimakazeMSBuildTasksAssembly)" />
+
+</Project>

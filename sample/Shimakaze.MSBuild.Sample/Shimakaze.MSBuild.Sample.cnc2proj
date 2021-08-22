@@ -1,2 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Project Sdk="Shimakaze.MSBuild.Sdk"/>
+<Project Sdk="Shimakaze.CNC2.Sdk" />

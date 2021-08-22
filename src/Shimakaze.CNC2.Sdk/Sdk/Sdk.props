@@ -1,0 +1,47 @@
+<Project
+    DefaultTargets="Build"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Default Properties -->
+  <PropertyGroup>
+    <DisableDefaultRules Condition=" !Exists('$(DisableDefaultRules)') ">false</DisableDefaultRules>
+
+
+    <CsfName Condition=" !Exists('$(CsfName)') AND '$(DisableDefaultRules)' != 'true' ">ra2md</CsfName>
+    <CsfVersion>3</CsfVersion>
+    <CsfLanguage>0</CsfLanguage>
+    <CsfUnknown>0</CsfUnknown>
+
+
+    <ArtName Condition=" !Exists('$(ArtName)') AND '$(DisableDefaultRules)' != 'true' ">artmd</ArtName>
+    <RulesName Condition=" !Exists('$(RulesName)') AND '$(DisableDefaultRules)' != 'true' ">rulesmd</RulesName>
+
+    <OutputPath Condition=" !Exists('$(OutputPath)') AND '$(DisableDefaultRules)' != 'true' ">out\</OutputPath>
+
+    <BuildIniFile Condition=" !Exists('$(BuildIniFile)') AND '$(DisableDefaultRules)' != 'true' ">true</BuildIniFile>
+    <BuildRuleIniFile Condition=" !Exists('$(BuildRuleIniFile)') AND '$(DisableDefaultRules)' != 'true' ">true</BuildRuleIniFile>
+    <BuildArtIniFile Condition=" !Exists('$(BuildArtIniFile)') AND '$(DisableDefaultRules)' != 'true' ">true</BuildArtIniFile>
+    <BuildCsfFile Condition=" !Exists('$(BuildCsfFile)') AND '$(DisableDefaultRules)' != 'true' ">true</BuildCsfFile>
+    <CopyAssets Condition=" !Exists('$(CopyAssets)') AND '$(DisableDefaultRules)' != 'true' ">true</CopyAssets>
+  </PropertyGroup>
+
+  <!-- Default Items -->
+  <ItemGroup>
+    <Rule
+        Include="Rules\*.rule"
+        Condition=" !Exists('@(Rule)') AND '$(DisableDefaultRules)' != 'true' " />
+    <Art
+        Include="Arts\*.art"
+        Condition=" !Exists('@(Art)') AND '$(DisableDefaultRules)' != 'true' " />
+    <Assets
+        Include="Assets\*"
+        Condition=" !Exists('@(Assets)') AND '$(DisableDefaultRules)' != 'true' " />
+  </ItemGroup>
+
+  <ItemGroup Condition=" !Exists('@(String)') AND '$(DisableDefaultRules)' != 'true' ">
+    <String Include="Strings\*.json" />
+    <String Include="Strings\*.xml" />
+    <String Include="Strings\*.csf" />
+  </ItemGroup>
+
+</Project>

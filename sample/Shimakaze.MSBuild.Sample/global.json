@@ -4,6 +4,6 @@
     "rollForward": "latestMajor"
   },
   "msbuild-sdks": {
-    "Shimakaze.MSBuild.Sdk": "1.0.0"
+    "Shimakaze.CNC2.Sdk": "1.0.0"
   }
 }

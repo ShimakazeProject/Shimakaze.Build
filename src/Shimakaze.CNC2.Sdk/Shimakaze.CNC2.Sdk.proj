@@ -1,0 +1,40 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PackageVersion>1.0.0</PackageVersion>
+    <PackageId>Shimakaze.CNC2.Sdk</PackageId>
+    <Description></Description>
+    <PackageDescription></PackageDescription>
+    <Authors>ShimakazeProject, frg2089</Authors>
+    <Copyright>COPYRIGHT 2021 ShimakazeProject, frg2089</Copyright>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ShimakazeProject/Shimakaze.Build</PackageProjectUrl>
+    <PackageIcon>Icon.png</PackageIcon>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReadmeFile></PackageReadmeFile>
+    <PackageTags>MSBuild;CNC2;RA2</PackageTags>
+    <RepositoryUrl>https://github.com/ShimakazeProject/Shimakaze.Build</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None
+        Include="Sdk\*"
+        Pack="true"
+        PackagePath="Sdk" />
+    <None
+        Include="targets\*"
+        Pack="true"
+        PackagePath="targets" />
+    <None
+        Include="tools\*.dll"
+        Pack="true"
+        PackagePath="tools" />
+    <None
+        Include="Icon.png"
+        Pack="true"
+        PackagePath="" />
+  </ItemGroup>
+
+  <Import Project="Shimakaze.CNC2.Sdk.targets" />
+
+</Project>

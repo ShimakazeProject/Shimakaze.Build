@@ -1,0 +1,27 @@
+<I18n>
+  <Label name="THEME:Intro">
+    
+      <Value status="active">
+        <Source>开场</Source>
+        <Target>开场</Target>
+      </Value>
+    
+  </Label>
+  <Label name="THEME:MadRap">
+    
+      <Value status="active">
+        <Source>地狱三月</Source>
+        <Target>地狱三月</Target>
+      </Value>
+    
+  </Label>
+  <Label name="THEME:Defense">
+    
+      <Value status="active">
+        <Source>防御</Source>
+        <Target>防御</Target>
+      </Value>
+    
+  </Label>
+
+</I18n>
